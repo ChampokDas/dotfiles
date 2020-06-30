@@ -1,0 +1,24 @@
+set path = ($path /usr/java/jdk1.8.0_162/bin/)
+if (! $?LD_LIBRARY_PATH) then
+  setenv LD_LIBRARY_PATH /usr/local/NVIDIA-OptiX-SDK-6.0.0-linux64/lib64/
+else
+  setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/local/NVIDIA-OptiX-SDK-6.0.0-linux64/lib64/
+endif
+
+set filec
+alias tree "find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g'"
+alias ls "ls -altrhF --color=auto"
+alias rm "rm -i"
+alias mv "mv -i"
+alias cp "cp -i"
+alias xterm "xterm -fa 'Monospace' -fs 12"
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias mkdir='mkdir -pv'
+
+alias ln='ln -i'
+complete cd p/1/f/
+complete word-fwd
+set prompt = '%{\033[1;36m%}TCSH:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} '
+
