@@ -76,6 +76,8 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'preservim/nerdtree'
+Plugin 'joshdick/onedark.vim'
+Plugin 'sheerun/vim-polyglot'
 call vundle#end()
 
 let g:jedi#use_splits_not_buffers="right"
