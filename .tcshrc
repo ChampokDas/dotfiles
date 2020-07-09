@@ -1,0 +1,50 @@
+set path = ($path /usr/java/jdk1.8.0_162/bin/)
+if (! $?LD_LIBRARY_PATH) then
+  setenv LD_LIBRARY_PATH /usr/local/NVIDIA-OptiX-SDK-6.0.0-linux64/lib64/
+else
+  setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/local/NVIDIA-OptiX-SDK-6.0.0-linux64/lib64/
+endif
+
+setenv BLACK '\033[1;30m'
+setenv RED '\033[1;31m'
+setenv GREEN '033[1;32m'
+setenv ORANGE '\033[1;33m'
+setenv BLUE '\033[1;34m'
+setenv PURPLE '\033[1:35m'
+setenv CYAN '\033[1:36m'
+setenv WHITE '\033[1;37m'
+setenv NC '\033[0m'
+
+set filec
+
+alias tree "find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g'"
+alias ls "ls -altrhF --color=auto"
+alias rm "rm -i"
+alias mv "mv -i"
+alias cp "cp -i"
+#                                           COLUMNSxROWS+X+Y
+#alias xterm     "/usr/bin/xterm -fa 'Courier New' -fs 12 -geometry 160x40+140+40 -xrm 'XTerm.vt100.allowTitleOps: false' &; "
+#alias xtermb    "/usr/bin/xterm -fa 'Courier New' -fs 12 -geometry 160x40+140+40 -xrm 'XTerm.vt100.allowTitleOps: false' &"
+#alias xtermc    "/usr/bin/xterm -fa 'Courier New' -fs 12 -geometry 160x40+140+40 -xrm 'XTerm.vt100.allowTitleOps: false' &"
+alias grep 'grep --color=auto'
+alias egrep 'egrep --color=auto'
+alias fgrep 'fgrep --color=auto'
+alias mkdir 'mkdir -pv'
+alias resetprompt "set prompt = '%{\033[1;36m%}TCSH:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} '"
+setenv SINGULARITY_SHELL /bin/tcsh
+#alias singularity "singularity shell --nv -B HOST_PATH:CONTAINER_PATH PATH_TO_IMAGE.sif"
+
+alias ln='ln -i'
+
+complete cd p/1/f/
+complete word-fwd
+set prompt = '%{\033[1;36m%}TCSH:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} '
+
+if (! $?SINGULARITY_NAME) then
+else
+    echo "${RED}\
+-----------------------------------Entering SINGULARITY-----------------------------------\
+-----------------------------------PREPARE FOR TAKE OFF-----------------------------------\
+    ${NC}"
+    set prompt = '%{\033[1;33m%}Singularity-TCSH:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} '
+endif
