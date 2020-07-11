@@ -23,7 +23,7 @@ vnoremap f zf
 set number
 set linebreak
 set showbreak=+++
-set textwidth=120
+set textwidth=150
 set showmatch
 set ruler
 
@@ -42,8 +42,11 @@ set tabpagemax=100
 set laststatus=2
 set showtabline=2
 
+set wrap
 " Stole this one from Kevin to also save my pinky
 nmap ; :
+
+set nocompatible
 
 set tags=./tags;/
 
@@ -57,7 +60,6 @@ if (empty($TMUX))
 endif
 
 syntax on
-colorscheme onedark
 set title
 set titleold=
 set term=xterm
@@ -65,7 +67,7 @@ filetype on
 filetype plugin indent on
 
 set swapfile
-set dir=/drive2/runDirCKD/tmp
+set dir=/tmp
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -80,6 +82,7 @@ Plugin 'joshdick/onedark.vim'
 Plugin 'sheerun/vim-polyglot'
 call vundle#end()
 
+colorscheme onedark
 let g:jedi#use_splits_not_buffers="right"
 let g:jedi#popup_select_first=0
 let g:jedi#show_call_signatures=1
@@ -90,7 +93,7 @@ map<C-o> :NERDTreeToggle<CR>
 autocmd FileType python setlocal completeopt-=preview
 autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd w " jump to active window on startup
-let NERDTreeShowHidden=1
+let NERDTreeShowHidden=1 " always show hidden files
 
 function! GetMatches(line1, line2, pattern)
   let hits = []
@@ -116,3 +119,6 @@ function! GetMatches(line1, line2, pattern)
   endfor
   return hits
 endfunction
+
+set wildmenu
+set history=1000

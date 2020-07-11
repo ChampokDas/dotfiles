@@ -10,10 +10,7 @@ export PURPLE='\e[1;35m'
 export CYAN='\e[1;36m'
 export NC='\e[0m'
 
-autoload -Uz promptinit
-promptinit
-prompt adam1
-export PROMPT=$'%{\033[1;36m%}ZSH:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} '
+export PS1=$'\e[1;31mZSH:%n@%m:\e[1;37m%~> '
 setopt histignorealldups sharehistory
 
 # Use emacs keybindings even if our EDITOR is set to vi
@@ -46,6 +43,7 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
+alias ls='ls -altrhF --color=auto'
 alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -iv'
