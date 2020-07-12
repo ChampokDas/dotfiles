@@ -20,6 +20,8 @@ nnoremap <C-l> <C-w>l
 nnoremap f za
 vnoremap f zf
 
+set noerrorbells
+set novisualbell
 set number
 set linebreak
 set showbreak=+++
@@ -41,6 +43,9 @@ set softtabstop=2
 set tabpagemax=100
 set laststatus=2
 set showtabline=2
+
+set foldmethod=indent " fold by indentlevel
+set nofoldenable      " but all folds open by default
 
 set wrap
 " Stole this one from Kevin to also save my pinky
@@ -69,12 +74,11 @@ filetype plugin indent on
 set swapfile
 set dir=/tmp
 
+" Vundle stuff
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
-"Plugin 'Valloric/YouCompleteMe'
-"Plugin 'ycm-core/YouCompleteMe'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'preservim/nerdtree'
@@ -91,7 +95,7 @@ let g:multi_cursor_quit_key = '<Esc>'
 map<C-o> :NERDTreeToggle<CR>
 
 autocmd FileType python setlocal completeopt-=preview
-autocmd VimEnter * NERDTree
+autocmd VimEnter * NERDTree " open NERDTree on startup
 autocmd VimEnter * wincmd w " jump to active window on startup
 let NERDTreeShowHidden=1 " always show hidden files
 
@@ -119,6 +123,14 @@ function! GetMatches(line1, line2, pattern)
   endfor
   return hits
 endfunction
-
 set wildmenu
+"set wildmenu=longest:list,full
+set wildignore+=*.o,*.obj,*~
+set wildignore+=*vim/backups*
+
 set history=1000
+set diffopt+=vertical
+set splitbelow
+set splitright
+" whenever i use java, this is the one thing that i hate the most
+imap ;sout System.out.println("");<left><left><left>
