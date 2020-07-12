@@ -10,7 +10,7 @@ export PURPLE='\e[1;35m'
 export CYAN='\e[1;36m'
 export NC='\e[0m'
 
-export PS1=$'\e[1;31mZSH:%n@%m:\e[1;37m%~> '
+export PS1=$'\e[1;31mZSH:%n@%m:\e[1;37m%/> '
 setopt histignorealldups sharehistory
 
 # Use emacs keybindings even if our EDITOR is set to vi
