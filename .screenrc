@@ -1,0 +1,78 @@
+startup_message off # who needs help
+
+# bold colors, needed because reasons
+attrcolor b ".I"
+
+# allow use of shift-pgup and shift-pdown
+termcapinfo xterm|xterms|xs|rxvt ti@:te@
+
+# erase background w/ current bg color
+defbce "on"
+
+# aaaaaaaaaaaaaaaaaaaaaaaahhhhhhh
+vbell off
+
+defscrollback 10000
+
+term xterm-256color
+
+hardstatus alwayslastline
+#hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %m-%d %{W}%c %{g}]'
+hardstatus string '%{= Kd} %{= Kd}%-w%{= Kr}[%{= KW}%n %t%{= Kr}]%{= Kd}%+w %-= %{KG} %H%{KW}|%{KY}%101`%{KW}|%D %M %d %Y%{= Kc} %C%A%{-}'
+
+
+# Switch windows with F3 prev, F4 next
+bindkey "^[OR" prev
+bindkey "^[OS" next
+
+# navigating regions with Ctrl-arrows
+bindkey "^[[1;5D" focus left
+bindkey "^[[1;5C" focus right
+bindkey "^[[1;5A" focus up
+bindkey "^[[1;5B" focus down
+
+# default windows will eventually be implemented
+screen -t Singularity 1 tcsh
+screen -t TCSH 2 tcsh
+screen -t Python3 3 python3
+screen -t Python2 4 python
+screen -t Media 5 tcsh
+select 0
+bind c screen 1 # window numbering starts at 1 not 0
+bind 0 select 10
+
+# I hate xoff
+bind s split
+
+# layouts
+layout autosave on
+layout new one
+select 1
+layout new two
+select 1
+split
+resize -v +8
+focus down
+select 4
+focus up
+layout new three
+select 1
+split
+resize -v +7
+focus down
+select 3
+split -v
+resize -h +10
+focus right
+select 4
+focus up
+
+# easy pz
+bind v split -v
+
+# quickly switch between regions using tab and arrows
+bind -c rsz \t    eval "focus"       "command -c rsz" # Tab
+bind -c rsz -k kl eval "focus left"  "command -c rsz" # Left
+bind -c rsz -k kr eval "focus right" "command -c rsz" # Right
+bind -c rsz -k ku eval "focus up"    "command -c rsz" # Up
+bind -c rsz -k kd eval "focus down"  "command -c rsz" # Down
