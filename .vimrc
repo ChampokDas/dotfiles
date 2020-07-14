@@ -15,9 +15,12 @@ nnoremap gy gT
 nnoremap h <C-w>h
 nnoremap l <C-w>l
 " I like seeing where I came from
-nnoremap <PageDown> <C-d>zz
-nnoremap <PageUp> <C-u>zz
+map <PageDown> <C-d>zz
+map <PageUp> <C-u>zz
+imap <PageDown> <C-o><C-d><C-o>zz
+imap <PageUp> <C-o><C-u><C-o>zz
 nnoremap G Gzz
+
 " Quicker window movement in normal mode
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
