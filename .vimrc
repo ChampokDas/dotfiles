@@ -7,47 +7,82 @@
 let mapleader=" "
 
 map <F3> <Esc>:set guifont=*<CR>
+" Who even needs help anymore lol
+nnoremap <F1> <nop>
+" What the fuck is Ex mode?
+nnoremap Q <nop>
 nnoremap gy gT
 nnoremap h <C-w>h
 nnoremap l <C-w>l
-
+" I like seeing where I came from
+nnoremap <PageDown> <C-d>zz
+nnoremap <PageUp> <C-u>zz
+nnoremap G Gzz
 " Quicker window movement in normal mode
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
-nnoremap f za
-vnoremap f zf
+" Pesky little tabs can't hind from me anymore
+set listchars=tab:\ \ ,trail:·,extends:>
 
+" Bing bang <silent>
 set noerrorbells
 set novisualbell
-set number
-set linebreak
-set showbreak=+++
-set textwidth=150
-set showmatch
-set ruler
 
+" Some say numbers are for noobs
+set number
+" Well I say you haven't felt RELATIVE NUMBERS YET
+set rnu
+
+" We're not in the 90's anymore old man
+set textwidth=150
+set ruler
+set cursorline " OK fine, I might be a little blind
+
+" Who doesn't like to search things
 set hlsearch
 set smartcase
 set ignorecase
 set incsearch
+set showmatch
 
 set autoindent
+
+" Tabs are evil
 set expandtab
 set shiftwidth=2
 set smartindent
 set smarttab
 set softtabstop=2
+
+" But vim tabs are nice sometimes
 set tabpagemax=100
+
+" I forget where I am sometimes
+set statusline=<<\ %f%m\ >>%r%h%w
+set statusline+=[%{&ff}]
+set statusline+=%=
+set statusline+=\ %P
+set statusline+=[%03.3b/\%02.2B]\ [POS=%04v]
+
 set laststatus=2
 set showtabline=2
 
-set foldmethod=indent " fold by indentlevel
-set nofoldenable      " but all folds open by default
+" When you need to yank it
+" But things just get in the way
+set nowrap
 
-set wrap
+" Make back space great again (or really backspace more modern
+set backspace=indent,eol,start
+
+" IDK what these do, but I steal em anyway
+set showmode
+set lazyredraw
+set cursorline
+set numberwidth=6
+
 " Stole this one from Kevin to also save my pinky
 nmap ; :
 
@@ -123,6 +158,7 @@ function! GetMatches(line1, line2, pattern)
   endfor
   return hits
 endfunction
+
 set wildmenu
 "set wildmenu=longest:list,full
 set wildignore+=*.o,*.obj,*~
@@ -132,5 +168,3 @@ set history=1000
 set diffopt+=vertical
 set splitbelow
 set splitright
-" whenever i use java, this is the one thing that i hate the most
-imap ;sout System.out.println("");<left><left><left>

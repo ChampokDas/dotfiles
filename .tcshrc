@@ -31,6 +31,9 @@ alias egrep 'egrep --color=auto'
 alias fgrep 'fgrep --color=auto'
 alias mkdir 'mkdir -pv'
 alias resetprompt "set prompt = '%{\033[1;36m%}TCSH:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} '"
+alias vi "vim"
+alias vimrc "vim ~/.vimrc"
+
 setenv SINGULARITY_SHELL /bin/tcsh
 #alias singularity "singularity shell --nv -B HOST_PATH:CONTAINER_PATH PATH_TO_IMAGE.sif"
 
