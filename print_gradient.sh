@@ -1,4 +1,3 @@
-#/usr/bin/sh
 
 awk 'BEGIN{
     s="/\\/\\/\\/\\/\\"; s=s s s s s s s s s s s s s s s s s s s s s s s;
