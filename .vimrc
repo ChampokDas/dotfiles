@@ -98,6 +98,10 @@ if (empty($TMUX))
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
   endif
   if (has("termguicolors"))
+    " Sometimes may need to use this in when using PuTTy + tmux
+    " set Vim-specific sequences for RGB colors
+    "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
   endif
 endif
