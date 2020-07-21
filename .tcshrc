@@ -41,7 +41,7 @@ alias ln='ln -i'
 
 complete cd p/1/f/
 complete word-fwd
-set prompt = '%{\033[1;36m%}TCSH:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} '
+set prompt = "%{\033[1;36m%}TCSH-$SHLVL-:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} "
 
 if (! $?SINGULARITY_NAME) then
 else
@@ -49,7 +49,7 @@ else
 -----------------------------------Entering SINGULARITY-----------------------------------\
 -----------------------------------PREPARE FOR TAKE OFF-----------------------------------\
     ${NC}"
-    set prompt = '%{\033[1;33m%}Singularity-TCSH:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} '
+    set prompt = "%{\033[1;33m%}Singularity-TCSH-$SHLVL-:%n@%m%{\033[0m%}:%{\033[1;37m%}%/%#%{\033[0m%} "
 endif
 
 complete cd 'C/*/d/'
