@@ -6,13 +6,24 @@
 # very often
 
 # Exit on any error
-set -e
+set -euxo pipefail
 
 # Setup our stuff
 cd $HOME
 mkdir local
 mkdir tmp_files
 MY_TMP_DIR_HOMIE=$HOME/tmp_files
+
+# Fish stuff
+FISH_VERSION="3.1.2"
+cd $MY_TMP_DIR_HOMIE
+wget https://github.com/fish-shell/fish-shell/releases/download/${FISH_VERSION}/fish-${FISH_VERSION}.tar.gz
+cd fish-${FISH_VERSION}
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=$HOME/local ..
+make
+make install
 
 # My favorite tool of all time, the legendary TMUX
 # sorry screen
