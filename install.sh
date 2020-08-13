@@ -1,17 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euxo pipefail
 
 # This file gets some of the things that
 # I need, various plugins and QOL stuff
 # and includes some software that I use
 # very often
 
-# Exit on any error
-set -euxo pipefail
-
 # Setup our stuff
 cd $HOME
-mkdir local
-mkdir tmp_files
+mkdir -p local
+mkdir -p tmp_files
 MY_TMP_DIR_HOMIE=$HOME/tmp_files
 
 # Fish stuff
@@ -19,42 +18,45 @@ FISH_VERSION="3.1.2"
 cd $MY_TMP_DIR_HOMIE
 wget https://github.com/fish-shell/fish-shell/releases/download/${FISH_VERSION}/fish-${FISH_VERSION}.tar.gz
 cd fish-${FISH_VERSION}
-mkdir build
+mkdir -p build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=$HOME/local ..
-make
+make -j 12
 make install
 
 # My favorite tool of all time, the legendary TMUX
 # sorry screen
 cd $MY_TMP_DIR_HOMIE
 TMUX_VERSION=2.6
-wget -O tmux-${TMUX_VERSION}.tar.gz http://sourceforge.net/projects/tmux/files/tmux/tmux-${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz/download
-wget https://github.com/downloads/libevent/libevent/libevent-2.0.19-stable.tar.gz
-wget ftp://ftp.gnu.org/gnu/ncurses/ncurses-5.9.tar.gz
+wget https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz -O tmux.tar.gz
+wget https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz -O libevent.tar.gz
+wget https://invisible-mirror.net/archives/ncurses/ncurses-6.2.tar.gz -O ncurses.tar.gz
 
 # Dependency 1/3 for TMUX, LIBEVENT
-tar xvzf libevent-2.0.19-stable.tar.gz
-cd libevent-2.0.19-stable
+mkdir -p libevent
+tar xvzf libevent.tar.gz -C libevent/ --strip-components=1
+cd libevent/
 ./configure --prefix=$HOME/local --disable-shared
-make
+make -j 12
 make install
 cd ..
 
 # Dependency 2/3 for TMUX, NCURSES
-tar xvzf ncurses-5.9.tar.gz
-cd ncurses-5.9
+mkdir -p ncurses
+tar xvzf ncurses.tar.gz -C ncurses/ --strip-components=1
+cd ncurses/
 ./configure --prefix=$HOME/local
-make
+make -j 12
 make install
 cd ..
 
 # Dependency 3/3 for TMUX, TMUX
 tar xvzf tmux-${TMUX_VERSION}.tar.gz
 cd tmux-${TMUX_VERSION}
-./configure CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include"
-CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib" make
-cp tmux $HOME/local/bin
+./configure --prefix=$HOME/local CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include"
+CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib"
+make -j 12
+make install
 cd ..
 
 # Some utils
@@ -79,7 +81,12 @@ make install
 # Yes, I know, who even uses Vundle
 # I do, stop looking at me like that
 cd $HOME
-git clone "https://github.com/VundleVim/Vundle.vim" "~/.vim"
+if [ ! -d "$HOME/.vim/" ]; then
+  git clone "https://github.com/VundleVim/Vundle.vim" $HOME/.vim/
+fi
+
+cd $HOME
+rm -rf $MY_TMP_DIR_HOMIE
 
 # A legendary tool, this one is an absolute requirement
 # everyone should have this along with many other LLVM tools
@@ -89,6 +96,3 @@ git clone "https://github.com/VundleVim/Vundle.vim" "~/.vim"
 # I don't see it, I'm gonna go right up and complain about it
 echo "Installing clang-format"
 sudo apt install clang-format
-
-cd $HOME
-rm -rf $MY_TMP_DIR_HOMIE
