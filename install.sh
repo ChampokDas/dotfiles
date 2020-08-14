@@ -27,7 +27,7 @@ make install
 # My favorite tool of all time, the legendary TMUX
 # sorry screen
 cd $MY_TMP_DIR_HOMIE
-TMUX_VERSION=2.6
+TMUX_VERSION=3.1b
 wget https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz -O tmux.tar.gz
 wget https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz -O libevent.tar.gz
 wget https://invisible-mirror.net/archives/ncurses/ncurses-6.2.tar.gz -O ncurses.tar.gz
