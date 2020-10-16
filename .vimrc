@@ -118,25 +118,39 @@ set dir=/tmp
 
 " Vundle stuff
 set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+try
+  call vundle#begin()
 
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'preservim/nerdtree'
-Plugin 'joshdick/onedark.vim'
-Plugin 'sheerun/vim-polyglot'
-call vundle#end()
+  Plugin 'VundleVim/Vundle.vim'
+  Plugin 'preservim/nerdtree'
+  Plugin 'joshdick/onedark.vim'
+  Plugin 'sheerun/vim-polyglot'
+  call vundle#end()
+catch /^Vim\%((\a\+)\)\=:E117/
+  " Do nothing
+ endtry
 
-colorscheme onedark
+try
+  colorscheme onedark
+catch /^Vim\%((\a\+)\)\=:E185/
+  colorscheme desert
+endtry
+
 let g:jedi#use_splits_not_buffers="right"
 let g:jedi#popup_select_first=0
 let g:jedi#show_call_signatures=1
 let g:multi_cursor_quit_key = '<Esc>'
 
-map<C-o> :NERDTreeToggle<CR>
+if exists("NERDTreeTogge")
+  map<C-o> :NERDTreeToggle<CR>
+endif
 
 autocmd FileType python setlocal completeopt-=preview
-autocmd VimEnter * NERDTree " open NERDTree on startup
-autocmd VimEnter * wincmd w " jump to active window on startup
+if exists("NERDTree")
+  autocmd VimEnter * NERDTree " open NERDTree on startup
+  autocmd VimEnter * wincmd w " jump to active window on startup
+endif
+
 autocmd VimResized * wincmd *
 let NERDTreeShowHidden=1 " always show hidden files
 
