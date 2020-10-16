@@ -16,8 +16,10 @@ MY_TMP_DIR_HOMIE=$HOME/tmp_files
 # Fish stuff
 FISH_VERSION="3.1.2"
 cd $MY_TMP_DIR_HOMIE
-wget https://github.com/fish-shell/fish-shell/releases/download/${FISH_VERSION}/fish-${FISH_VERSION}.tar.gz
-cd fish-${FISH_VERSION}
+wget https://github.com/fish-shell/fish-shell/releases/download/${FISH_VERSION}/fish-${FISH_VERSION}.tar.gz -O fish.tar.gz
+mkdir -p fish
+tar xvzf fish.tar.gz -C fish/ --strip-components=1
+cd fish/
 mkdir -p build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=$HOME/local ..
@@ -51,31 +53,14 @@ make install
 cd ..
 
 # Dependency 3/3 for TMUX, TMUX
-tar xvzf tmux-${TMUX_VERSION}.tar.gz
-cd tmux-${TMUX_VERSION}
+mkdir -p tmux
+tar xvzf tmux.tar.gz -C tmux/ --strip-components=1
+cd tmux/
 ./configure --prefix=$HOME/local CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include"
 CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib"
 make -j 12
 make install
 cd ..
-
-# Some utils
-cd $MY_TMP_DIR_HOMIE
-wget http://prdownloads.sourceforge.net/tcl/tcl8.5.15-src.tar.gz
-wget http://downloads.sourceforge.net/project/expect/Expect/5.45/expect5.45.tar.gz
-
-tar xvzf tcl8.5.15-src.tar.gz
-tar xvzf expect5.45.tar.gz
-
-cd tcl8.5.15/unix
-./configure --prefix=$HOME/local
-make
-make install
-
-cd ../../expect5.45/
-./configure --prefix=$HOME/local
-make
-make install
 
 # Vim stuff
 # Yes, I know, who even uses Vundle
@@ -87,12 +72,3 @@ fi
 
 cd $HOME
 rm -rf $MY_TMP_DIR_HOMIE
-
-# A legendary tool, this one is an absolute requirement
-# everyone should have this along with many other LLVM tools
-# You should also have Valgrind, you'd be stupid to not have it
-# Harsh, yes, but necessary
-# Also is the main reason why I'm installing it as sudo, because if
-# I don't see it, I'm gonna go right up and complain about it
-echo "Installing clang-format"
-sudo apt install clang-format
