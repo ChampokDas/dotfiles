@@ -1,0 +1,16 @@
+--recurse=yes
+--tag-relative=yes
+--exclude=.git
+--exclude=*.pyc
+--exclude=*.pyo
+--exclude=*.md
+--exclude=*.mkd
+--exclude=*.txt
+--exclude=*.log
+--exclude=*.csv
+--exclude=*.pdf
+--exclude=*.html
+--exclude=*.css
+--exclude=*.jpg
+--exclude=*.o
+--exclude=*.deps
