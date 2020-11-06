@@ -8,8 +8,6 @@ let mapleader=" "
 nnoremap <leader>c :noh<CR>
 
 map <F3> <Esc>:set guifont=*<CR>
-" Who even needs help anymore lol
-nnoremap <F1> <nop>
 " What the fuck is Ex mode?
 nnoremap Q <nop>
 nnoremap gy gT
@@ -19,6 +17,7 @@ map <PageUp> <C-u>zz
 imap <PageDown> <C-o><C-d><C-o>zz
 imap <PageUp> <C-o><C-u><C-o>zz
 nnoremap G Gzz
+nnoremap gf <C-w>vgf
 
 " Quicker window movement in normal mode
 nnoremap <C-j> <C-w>j
@@ -191,6 +190,86 @@ set diffopt+=vertical
 set splitright
 
 set cc=80,120,150
+set modelines=0
+set gdefault
+
+function GenTags()
+  let curPath = g:NERDTree.ForCurrentTab().getRoot().path.str()
+  exec ':!ctags --extra=+f -R -f ' . curPath . '/tags ' . curPath
+endfunction
+
+
+"Glorified lidl buffer renumbering
+nmap <silent> <leader>r :argdel *<CR>:bufdo argadd %<CR>:%bd<CR>:argdo e<CR><CR>:b 1<CR>
+
+nmap <silent> <F1> :call GenTags()<CR>
+
+let g:jedi#use_splits_not_buffers="right"
+let g:jedi#popup_select_first=0
+let g:jedi#show_call_signatures=1
+let g:multi_cursor_quit_key = '<Esc>'
+
+if !empty(glob("~/.vim/bundle/nerdtree"))
+  map<leader>o :NERDTreeToggle<CR>
+else
+  map<leader>o :Lex<CR>
+endif
+
+au InsertEnter * hi statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta
+au InsertLeave * hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan
+hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan
+
+" Status line
+" default: set statusline=%f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)
+
+" Status Line Custom
+let g:currentmode={
+    \ 'n'  : 'Normal',
+    \ 'no' : 'NormalÂ·Operator Pending',
+    \ 'v'  : 'Visual',
+    \ 'V'  : 'VÂ·Line',
+    \ '^V' : 'VÂ·Block',
+    \ 's'  : 'Select',
+    \ 'S'  : 'SÂ·Line',
+    \ '^S' : 'SÂ·Block',
+    \ 'i'  : 'Insert',
+    \ 'R'  : 'Replace',
+    \ 'Rv' : 'VÂ·Replace',
+    \ 'c'  : 'Command',
+    \ 'cv' : 'Vim Ex',
+    \ 'ce' : 'Ex',
+    \ 'r'  : 'Prompt',
+    \ 'rm' : 'More',
+    \ 'r?' : 'Confirm',
+    \ '!'  : 'Shell',
+    \ 't'  : 'Terminal'
+    \}
+
+set laststatus=2
+set statusline=
+set statusline+=%0*\ %n\                                 " Buffer number
+set statusline+=%1*\ %{getcwd()}\ \|
+set statusline+=%1*\ %<%f%m%r%h%w\                       " File path, modified, readonly, helpfile, preview
+set statusline+=%3*â”‚                                     " Separator
+set statusline+=%2*\ %Y\                                 " FileType
+set statusline+=%3*â”‚                                     " Separator
+set statusline+=%2*\ %{''.(&fenc!=''?&fenc:&enc).''}     " Encoding
+set statusline+=\ (%{&ff})                               " FileFormat (dos/unix..)
+set statusline+=%=                                       " Right Side
+set statusline+=%2*\ C:%02v                         " Colomn number
+set statusline+=%3*â”‚                                     " Separator
+set statusline+=%1*\ %02l/%L\               " Line number / total lines, percentage of document
+set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
+
+hi User1 cterm=bold ctermfg=White ctermbg=239 guibg=#4e4e4e guifg=#adadad
+hi User2 ctermfg=007 ctermbg=236 guibg=#303030 guifg=#adadad
+hi User3 ctermfg=236 ctermbg=236 guibg=#303030 guifg=#303030
+hi User4 ctermfg=239 ctermbg=239 guibg=#4e4e4e guifg=#4e4e4e
+
+set clipboard=unnamedplus
+
+set path+=**
+
 set modelines=0
 set gdefault
 set undodir=~/.vim/undo/
