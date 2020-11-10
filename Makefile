@@ -1,6 +1,6 @@
 all: install-bash install-tcsh install-fish install-zsh \
      install-ctags install-clang install-tmux install-screen install-gdb \
-     install-colors install-vim install-docker install-other
+     install-colors install-vim install-docker install-python install-other
 
 install-bash:
 	ln -fs `pwd`/bash/bashrc ~/.bashrc
@@ -47,3 +47,5 @@ install-other:
 
 install-docker:
 	ln -fs `pwd`/docker ~/.docker
+
+
