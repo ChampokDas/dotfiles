@@ -1,0 +1,41 @@
+[github]
+  user = ChampokDas
+
+[user]
+  name = Champok Das
+  email = ckdas@umich.edu
+
+[color]
+  ui = auto
+
+[color "diff"]
+  meta = blue bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+
+[color "branch"]
+  current = yellow reverse
+  local = yellow bold
+  remote = green bold
+  plain = red bold
+
+[color "status"]
+  added = green bold
+  changed = yellow
+  untracked = blue bold
+
+[alias]
+  st = status
+  ci = commit
+  br = branch
+  co = checkout
+  df = diff
+  lg = log -p
+  ls = ls-files
+  lop = log --graph --decorate --pretty=oneline --abbrev-commit
+  loo = log --graph --decorate --pretty=oneline --abbrev-commit --all
+
+[push]
+  default = matching
+
