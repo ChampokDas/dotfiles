@@ -1,3 +1,6 @@
+[advice]
+  statusHints = false
+ 
 [github]
   user = ChampokDas
 
@@ -25,16 +28,52 @@
   changed = yellow
   untracked = blue bold
 
+[color "grep"]
+  filename = yellow bold
+
 [alias]
-  st = status
-  ci = commit
+  alias = !git config --get-regexp '^alias\\.' | colrm 1 6 | sed 's/[ ]/ = /'
+  branches = branch --all
+  pretty = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  remotes = remote --verbose
+  reword = commit --amend
+  root = rev-parse --show-toplevel
+  squash = rebase --interactive --autosquash
+  tags = tag --list
+  unstage = reset HEAD
+  untrack = rm --cache
+  changed = diff --name-only
   br = branch
+  ci = commit
   co = checkout
   df = diff
   lg = log -p
   ls = ls-files
   lop = log --graph --decorate --pretty=oneline --abbrev-commit
   loo = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  info = remote -v
+  st = status
+  find = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --grep
+
+[core]
+  autocrlf = input
+  editor = vim
+  excludesFile = ~/.gitignore
+  untrackedCache = true
+
+[diff]
+  algorithm = patience
+  noprefix = true
+  renames = copy
+
+[fetch]
+  prune = true
+  pruneTags = true
+
+[log]
+  date = local
+  follow = true
+  mailmap = true
 
 [push]
   default = matching
