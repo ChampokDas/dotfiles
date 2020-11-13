@@ -250,15 +250,15 @@ set statusline=
 set statusline+=%0*\ %n\                                 " Buffer number
 set statusline+=%1*\ %{getcwd()}\ \|
 set statusline+=%1*\ %<%f%m%r%h%w\                       " File path, modified, readonly, helpfile, preview
-set statusline+=%3*â”‚                                     " Separator
+set statusline+=%3*|‚                                    " Separator
 set statusline+=%2*\ %Y\                                 " FileType
-set statusline+=%3*â”‚                                     " Separator
+set statusline+=%3*|‚                                    " Separator
 set statusline+=%2*\ %{''.(&fenc!=''?&fenc:&enc).''}     " Encoding
 set statusline+=\ (%{&ff})                               " FileFormat (dos/unix..)
 set statusline+=%=                                       " Right Side
-set statusline+=%2*\ C:%02v                         " Colomn number
-set statusline+=%3*â”‚                                     " Separator
-set statusline+=%1*\ %02l/%L\               " Line number / total lines, percentage of document
+set statusline+=%2*\ C:%02v                              " Colomn number
+set statusline+=%3*|                                     " Separator
+set statusline+=%1*\ %02l/%L\                            " Line number / total lines, percentage of document
 set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
 
 hi User1 cterm=bold ctermfg=White ctermbg=239 guibg=#4e4e4e guifg=#adadad
