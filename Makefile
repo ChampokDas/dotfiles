@@ -4,11 +4,11 @@ all: install-bash install-tcsh install-fish install-zsh \
 
 install-bash:
 	ln -fs `pwd`/bash/bashrc ~/.bashrc
-	ln -fs `pwd`/bash/bash_profile ~/.bash_profile
 	ln -fs `pwd`/bash/bash_aliases ~/.bash_aliases
 	ln -fs `pwd`/bash/inputrc ~/.inputrc
 
 install-tcsh:
+	ln -fs `pwd`/tcsh/login ~/.login
 	ln -fs `pwd`/tcsh/tcshrc ~/.tcshrc
 	ln -fs `pwd`/tcsh/cshrc ~/.cshrc
 

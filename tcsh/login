@@ -1,0 +1,10 @@
+set path = (${HOME}/local/bin $path)
+set path = (${HOME}/.local/bin $path)
+set path = ($path /usr/java/jdk1.8.0_162/bin/)
+if (! $?LD_LIBRARY_PATH) then
+  setenv LD_LIBRARY_PATH /usr/local/NVIDIA-OptiX-SDK-6.0.0-linux64/lib64/
+  setenv LD_LIBRARY_PATH ${HOME}/local/lib/:${HOME}/.local/lib/:${LD_LIBRARY_PATH}
+else
+  setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/local/NVIDIA-OptiX-SDK-6.0.0-linux64/lib64/
+  setenv LD_LIBRARY_PATH ${HOME}/local/lib/:${HOME}/.local/lib/:${LD_LIBRARY_PATH}
+endif
