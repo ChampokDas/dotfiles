@@ -7,7 +7,7 @@
 let mapleader=" "
 nnoremap <leader>c :noh<CR>
 
-map <F3> <Esc>:set guifont=*<CR>
+map <F3> :GoFmt<CR>
 " What the fuck is Ex mode?
 nnoremap Q <nop>
 nnoremap gy gT
