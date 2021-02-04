@@ -36,6 +36,7 @@ set listchars=tab:\ \ ,trail:·,extends:>
 " Bing bang <silent>
 set noerrorbells
 set novisualbell
+set belloff=all
 
 " Some say numbers are for noobs
 set number

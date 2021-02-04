@@ -42,10 +42,12 @@ install-vim:
 install-python:
 	ln -fs `pwd`/python/pythonrc.py ~/.pythonrc.py
 
-install-other:
-	ln -fs `pwd`/other/profile ~/.profile
-
 install-docker:
 	ln -fs `pwd`/docker ~/.docker
+
+install-other:
+	ln -fs `pwd`/other/profile ~/.profile
+	ln -fs `pwd`/git/gitconfig ~/.gitconfig
+
 
 
