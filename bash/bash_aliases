@@ -4,7 +4,7 @@ function tree() {
 
 alias npo='|& tee out.txt'
 alias apo='|& tee -a out.txt'
-alias ls="ls -altrF --color=auto"
+alias ls="ls -altrhF --color=auto"
 
 alias vi="vim"
 alias vimrc="vim ~/.vimrc"
