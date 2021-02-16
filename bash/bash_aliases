@@ -14,4 +14,6 @@ alias tmux2="tmux -2 new-session\; split-window -h \; split-window -v \"python3\
 
 alias wtc="curl --silent 'http://whatthecommit.com/index.txt'"
 
-alias docker="podman"
+
+[[ $(type -P "podman") ]] && alias docker="podman"
+#alias docker="podman"
