@@ -4,6 +4,8 @@
 " ======================================
 "
 "
+scriptencoding utf-8
+set encoding=utf-8
 let mapleader=" "
 nnoremap <leader>c :noh<CR>
 
@@ -25,30 +27,19 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
-"nnoremap <tab> %
-"vnoremap <tab> %
-
-
-" Pesky little tabs can't hind from me anymore
 set list
 set listchars=tab:\ \ ,trail:·,extends:>
 
-" Bing bang <silent>
 set noerrorbells
 set novisualbell
 set belloff=all
 
-" Some say numbers are for noobs
 set number
-" Well I say you haven't felt RELATIVE NUMBERS YET
 set rnu
 
-" We're not in the 90's anymore old man
 set textwidth=150
 set ruler
-set cursorline " OK fine, I might be a little blind
 
-" Who doesn't like to search things
 set hlsearch
 set smartcase
 set ignorecase
@@ -57,39 +48,24 @@ set showmatch
 
 set autoindent
 
-" Tabs are evil
 set expandtab
 set shiftwidth=2
 set smartindent
 set smarttab
 set softtabstop=2
 
-" But vim tabs are nice sometimes
 set tabpagemax=100
 
-" I forget where I am sometimes
-set statusline=<<\ %f%m\ >>%r%h%w
-set statusline+=[%{&ff}]
-set statusline+=%=
-set statusline+=\ %P
-set statusline+=[%03.3b/\%02.2B]\ [POS=%04v]
-
 set laststatus=2
-set showtabline=2
 
-" When you need to yank it
-" But things just get in the way
 set nowrap
 
-" Make back space great again (or really backspace more modern
 set backspace=indent,eol,start
 
-" IDK what these do, but I steal em anyway
 set showmode
 set lazyredraw
 set cursorline
 set numberwidth=6
-" Stole this one from Kevin to also save my pinky
 nmap ; :
 
 set nocompatible
@@ -128,7 +104,7 @@ try
   call vundle#end()
 catch /^Vim\%((\a\+)\)\=:E117/
   " Do nothing
- endtry
+endtry
 
 try
   colorscheme onedark
@@ -149,35 +125,12 @@ autocmd FileType python setlocal completeopt-=preview
 if exists("NERDTree")
   autocmd VimEnter * NERDTree " open NERDTree on startup
   autocmd VimEnter * wincmd w " jump to active window on startup
+  let NERDTreeShowHidden=1 " always show hidden files
 endif
 
 autocmd VimResized * wincmd *
-let NERDTreeShowHidden=1 " always show hidden files
 
-function! GetMatches(line1, line2, pattern)
-  let hits = []
-  for line in range(a:line1, a:line2)
-    let text = getline(line)
-    let from = 0
-    while 1
-      let next = match(text, a:pattern, from, 1)
-      if next < 0
-        break
-      endif
-      let from = matchend(text, a:pattern, from, 1)
-      if from > next
-        call add(hits, strpart(text, next, from - next))
-      else
-        let char = matchstr(text, '.', next)
-        if empty(char)
-          break
-        endif
-        let from = next + strlen(char)
-      endif
-    endwhile
-  endfor
-  return hits
-endfunction
+autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
 
 set wildmenu
 set wildmode=list:longest
@@ -187,28 +140,20 @@ set wildignore+=*vim/backups*
 
 set history=1000
 set diffopt+=vertical
-"set splitbelow
 set splitright
 
-set cc=80,120,150
+set cc=80,100,120,150
 set modelines=0
 set gdefault
 
-function GenTags()
+function! GenTags()
   let curPath = g:NERDTree.ForCurrentTab().getRoot().path.str()
   exec ':!ctags --extra=+f -R -f ' . curPath . '/tags ' . curPath
 endfunction
 
-
-"Glorified lidl buffer renumbering
 nmap <silent> <leader>r :argdel *<CR>:bufdo argadd %<CR>:%bd<CR>:argdo e<CR><CR>:b 1<CR>
 
 nmap <silent> <F1> :call GenTags()<CR>
-
-let g:jedi#use_splits_not_buffers="right"
-let g:jedi#popup_select_first=0
-let g:jedi#show_call_signatures=1
-let g:multi_cursor_quit_key = '<Esc>'
 
 if !empty(glob("~/.vim/bundle/nerdtree"))
   map<leader>o :NERDTreeToggle<CR>
@@ -216,44 +161,131 @@ else
   map<leader>o :Lex<CR>
 endif
 
-au InsertEnter * hi statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta
-au InsertLeave * hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan
-hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan
+au InsertEnter * hi User1 ctermfg=232 ctermbg=166 guifg=#080808 guibg=#ffff00 
+au InsertLeave * hi User1 ctermfg=232 ctermbg=239 guifg=#adadad guibg=#4e4e4e 
+
+au InsertEnter * hi statusline ctermfg=232 ctermbg=166 guifg=black guibg=#ff0000
+au InsertLeave * hi statusline ctermfg=232 ctermbg=239 guifg=black guibg=#5fff5f
+
+hi statusline ctermfg=239 ctermbg=239 guifg=black guibg=#5fff5f
+
+
+if exists("+showtabline")
+	function! MyTabLine()
+			let s = ''
+			let t = tabpagenr()
+			let i = 1
+			while i <= tabpagenr('$')
+					let buflist = tabpagebuflist(i)
+					let winnr = tabpagewinnr(i)
+					let s .= '%' . i . 'T'
+					let s .= (i == t ? '%1*' : '%2*')
+
+					" let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+					" let s .= ' '
+					let s .= (i == t ? '%#User1#' : '%#User0#')
+					let s .= ' ' . i . ' '
+					let s .= (i == t ? '%#User1#' : '%#TabLine#')
+
+					let bufnr = buflist[winnr - 1]
+					let file = bufname(bufnr)
+					let buftype = getbufvar(bufnr, '&buftype')
+
+					if buftype == 'help'
+							let file = 'help:' . fnamemodify(file, ':t:r')
+
+					elseif buftype == 'quickfix'
+							let file = 'quickfix'
+
+					elseif buftype == 'nofile'
+							if file =~ '\/.'
+									let file = substitute(file, '.*\/\ze.', '', '')
+							endif
+
+					else
+							let file = pathshorten(fnamemodify(file, ':p:~:.'))
+							if getbufvar(bufnr, '&modified')
+									let file = '+' . file
+							endif
+
+					endif
+
+					if file == ''
+							let file = '[No Name]'
+					endif
+
+					let s .= '' . file
+
+					let nwins = tabpagewinnr(i, '$')
+					if nwins > 1
+							let modified = ''
+							for b in buflist
+									if getbufvar(b, '&modified') && b != bufnr
+											let modified = '*'
+											break
+									endif
+							endfor
+							let hl = (i == t ? '%#User1#' : '%#User0#')
+							let nohl = (i == t ? '%#TabLineSel#' : '%#TabLine#')
+							let s .= ' ' . modified . '(' . hl . winnr . nohl . '/' . nwins . ')'
+					endif
+
+					if i < tabpagenr('$')
+							let s .= '%#TabLine#'
+					else
+							let s .= ''
+					endif
+
+					let i = i + 1
+
+			endwhile
+
+			let s .= '%T%#TabLineFill#%='
+			let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+			return s
+
+	endfunction
+
+	set showtabline=2
+
+	set tabline=%!MyTabLine()
+endif
 
 " Status line
 " default: set statusline=%f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)
 
 " Status Line Custom
 let g:currentmode={
-    \ 'n'  : 'Normal',
-    \ 'no' : 'NormalÂ·Operator Pending',
-    \ 'v'  : 'Visual',
-    \ 'V'  : 'VÂ·Line',
-    \ '^V' : 'VÂ·Block',
-    \ 's'  : 'Select',
-    \ 'S'  : 'SÂ·Line',
-    \ '^S' : 'SÂ·Block',
-    \ 'i'  : 'Insert',
-    \ 'R'  : 'Replace',
-    \ 'Rv' : 'VÂ·Replace',
-    \ 'c'  : 'Command',
-    \ 'cv' : 'Vim Ex',
-    \ 'ce' : 'Ex',
-    \ 'r'  : 'Prompt',
-    \ 'rm' : 'More',
-    \ 'r?' : 'Confirm',
-    \ '!'  : 'Shell',
-    \ 't'  : 'Terminal'
+    \ 'n'      : 'Normal',
+    \ 'no'     : 'Normal·Operator Pending',
+    \ 'v'      : 'Visual',
+    \ 'V'      : 'V·Line',
+    \ "\<C-v>" : 'V·Block',
+    \ 's'      : 'Select',
+    \ 'S'      : 'S·Line',
+    \ "\<C-s>" : 'S·Block',
+    \ 'i'      : 'Insert',
+    \ 'R'      : 'Replace',
+    \ 'Rv'     : 'V·Replace',
+    \ 'c'      : 'Command',
+    \ 'cv'     : 'Vim Ex',
+    \ 'ce'     : 'Ex',
+    \ 'r'      : 'Prompt',
+    \ 'rm'     : 'More',
+    \ 'r?'     : 'Confirm',
+    \ '!'      : 'Shell',
+    \ 't'      : 'Terminal'
     \}
 
 set laststatus=2
 set statusline=
 set statusline+=%0*\ %n\                                 " Buffer number
-set statusline+=%1*\ %{getcwd()}\ \|
+set statusline+=%1*\ %{getcwd()}\ \|                     " Work Dir
 set statusline+=%1*\ %<%f%m%r%h%w\                       " File path, modified, readonly, helpfile, preview
-set statusline+=%3*|                                    " Separator
+set statusline+=%1*\                                     " Reset
+set statusline+=%3*|                                     " Separator
 set statusline+=%2*\ %Y\                                 " FileType
-set statusline+=%3*|                                    " Separator
+set statusline+=%3*|                                     " Separator
 set statusline+=%2*\ %{''.(&fenc!=''?&fenc:&enc).''}     " Encoding
 set statusline+=\ (%{&ff})                               " FileFormat (dos/unix..)
 set statusline+=%=                                       " Right Side
@@ -262,15 +294,17 @@ set statusline+=%3*|                                     " Separator
 set statusline+=%1*\ %02l/%L\                            " Line number / total lines, percentage of document
 set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
 
-hi User1 cterm=bold ctermfg=White ctermbg=239 guibg=#4e4e4e guifg=#adadad
-hi User2 ctermfg=007 ctermbg=236 guibg=#303030 guifg=#adadad
-hi User3 ctermfg=236 ctermbg=236 guibg=#303030 guifg=#303030
-hi User4 ctermfg=239 ctermbg=239 guibg=#4e4e4e guifg=#4e4e4e
+hi User0 ctermfg=232 ctermbg=239 guibg=#4e4e4e guifg=#000000
+hi User1 ctermfg=239 ctermbg=239 guibg=#4e4e4e guifg=#adadad
+hi User2 ctermfg=239 ctermbg=236 guibg=#303030 guifg=#adadad
+hi User3 ctermfg=232 ctermbg=236 guibg=#303030 guifg=#303030
+hi User4 ctermfg=232 ctermbg=239 guibg=#4e4e4e guifg=#4e4e4e
 
 set clipboard=unnamedplus
 
 set path+=**
-
+" ▶
+" ◀
 set modelines=0
 set gdefault
 set undodir=~/.vim/undo/
