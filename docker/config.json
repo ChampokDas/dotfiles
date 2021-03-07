@@ -3,5 +3,6 @@
     "credsStore":"desktop",
     "experimental":"enabled",
     "stackOrchestrator":"swarm",
-    "detachKeys": "ctrl-a,k"
+    "detachKeys":"ctrl-x,d",
+    "psFormat":"table {{.ID}}: {{.Names}}\\t{{.Image}}\\t{{.RunningFor}} {{.Status}}\\t{{.Ports}}\\t{{.State}}"
 }
