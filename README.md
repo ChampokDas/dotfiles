@@ -12,7 +12,7 @@ For now, stick with just the install.sh script to do a bit.
 
 This is eventually going to get Dockerized and compatible with any environment, but still will be all the things that only I like.
 
-```
+```bash
 git clone git@github.com:ChampokDas/dotfiles.git
 
 cd dotfiles/
