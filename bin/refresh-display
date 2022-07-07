@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+NEW_DISPLAY=$(tmux show-env | sed -n 's/^DISPLAY=//p')
+session_list=($(tmux list-panes -as -F "#{session_name}:#{window_index}.#{pane_index} #{pane_current_command}"))
+
+for (( i=0; i <${#session_list[@]} ; i+=2 )); do
+  session_window_pane="${session_list[i]}"
+  current_cmd="${session_list[i+1]}"
+  echo "$session_window_pane -> $current_cmd"
+
+  if [[ "${current_cmd}" == "zsh" || "${current_cmd}" == "bash" ]]; then
+    echo "BASH/ZSH: Updating $session_window_pane DISPLAY to $NEW_DISPLAY"
+    tmux send-keys -t ${session_window_pane} "export DISPLAY=$NEW_DISPLAY" Enter
+
+  elif [[ "${current_cmd}" == *"csh"* ]]; then
+    echo "[T]CSH: Updating $session_window_pane DISPLAY to $NEW_DISPLAY"
+    tmux send-keys -t ${session_window_pane} "setenv DISPLAY $NEW_DISPLAY" Enter
+
+  elif [[ "${current_cmd}" == *"vi"* ]]; then
+    echo "VI: Updating $session_window_pane DISPLAY to $NEW_DISPLAY"
+    tmux send-keys -t ${session_window_pane} Escape
+    tmux send-keys -t ${session_window_pane} ":let \$DISPLAY = \"$NEW_DISPLAY\"" Enter
+  elif [[ "${current_cmd}" == *"top"* ]]; then
+    echo "[H]TOP: Updating $session_window_pane DISPLAY to $NEW_DISPLAY"
+    tmux send-keys -t ${session_window_pane} C-z
+    sleep 1
+    repeater=$(tmux list-panes -t ${session_window_pane} -F "#{pane_current_command}")
+
+    for (( j=0; j <${#repeater[@]} ; j+=1 )); do
+      rep="${repeater[j]}"
+      if [[ "${rep}" == *"zsh"* || "${rep}" == *"bash"* ]]; then
+        tmux send-keys -t ${session_window_pane} "export DISPLAY=$NEW_DISPLAY" Enter
+      elif [[ "${rep}" == *"csh"* ]]; then
+        tmux send-keys -t ${session_window_pane} "setenv DISPLAY $NEW_DISPLAY" Enter
+      fi
+    done
+
+    tmux send-keys -t ${session_window_pane} "fg" Enter
+
+  else
+    echo "OTHER: Did not update $session_window_pane as processing '$current_cmd' \
+is not defined"
+  fi
+done

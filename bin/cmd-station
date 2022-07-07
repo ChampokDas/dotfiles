@@ -1,0 +1,43 @@
+#!/bin/bash -c
+
+if [ -z "$1" ]
+then
+  echo "Give argument of style ./command-station <name-of-image> '<command-to-run>', take note of ''"
+  exit 1
+fi
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+if [[ $1 == *:* ]]
+then
+  CONTAINER=$1
+  COMMANDS=${@:2}
+else
+  # If first arg does not contain image name, then use this default
+  CONTAINER="dasck-station:latest"
+  COMMANDS=${@}
+fi
+
+command -v docker >/dev/null 2>&1 || { echo >&2 "Docker is not installed."; exit 1; }
+
+docker info >/dev/null 2>&1 || { echo >&2 "Docker cannot connect to socket, is Docker running?" ; exit 1; }
+
+SSHPARAM=""
+[ -e "${HOME}/.ssh" ] && SSHPARAM="--volume ${HOME}/.ssh:/root/.ssh:ro"
+
+# Below is for building the container, if image already created no need to do this
+#docker image inspect $CONTAINER >/dev/null 2>&1 || ( echo "instantiating the container" ; docker build --no-cache -t $CONTAINER -f \
+#$SCRIPTPATH/Dockerfile --build-arg USER_NAME="$USER"  --build-arg USER_ID=$(id -u)  --build-arg GROUP_ID=$(id -g) .  )
+
+if [ -t 0 ]; 
+then 
+  DOCKER_ARGS=-it; 
+fi
+
+executer="docker run --rm"
+mounts="${SSHPARAM} --volume $(pwd):$(pwd):Z --volume ${HOME}:/root --volume /drive2:/drive2 -v/tmp/.X11-unix:/tmp/.X11-unix"
+environ="-e DISPLAY=${DISPLAY}"
+workdir="-w $(pwd)"
+
+echo "${executer} ${DOCKER_ARGS} ${environ} -h ${CONTAINER} --privileged ${mounts} ${workdir} ${CONTAINER} bash -c '${COMMANDS}'"
+docker run --rm $DOCKER_ARGS ${environ} -h ${CONTAINER} --privileged ${mounts} ${workdir} ${CONTAINER} bash -c "${COMMANDS}"
+#docker run --rm $DOCKER_ARGS -h $CONTAINER --privileged $SSHPARAM -v $(pwd):$(pwd):Z -w $(pwd) $CONTAINER sh -c "$COMMANDS"

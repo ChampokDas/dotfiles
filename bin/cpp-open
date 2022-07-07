@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+#sed 's/^[^/]*\///'
+myincludes=($(ls include/*))
+mysrcs=($(ls src/*))
+
+# Clear out first directory in each element
+# Effectively removes include/ and src/
+for i in "${!myincludes[@]}"; do
+  myincludes[$i]="${myincludes[i]#*\/}"
+done
+for i in "${!mysrcs[@]}"; do
+  mysrcs[$i]="${mysrcs[i]#*\/}"
+done
+
+#readarray -t myincludes < <(printf '%s\n' "${myincludes[@]}" | sort)
+#readarray -t mysrcs < <(printf '%s\n' "${mysrcs[@]}" | sort)
+
+head=0
+inc=0
+
+matched_pair=()
+unfound=()
+
+for i in "${!myincludes[@]}"; do
+  for j in "${!mysrcs[@]}"; do
+    if [ "${myincludes[i]%.*}" == "${mysrcs[j]%.*}" ]
+    then
+      # Unnecessary to maintain extension for matched files
+      # TODO: But consider if the file is not named aptly as .h or .cpp
+      # Then it is required to append with extension
+      matched_pair+=("${myincludes[i]%.*}")
+      myincludes[$i]="~"
+      mysrcs[$j]="~"
+    fi
+  done
+done
+
+for i in "${!myincludes[@]}"; do
+  if [ "${myincludes[i]}" != "~" ]
+  then
+    unfound+=("include/${myincludes[i]}")
+  fi
+done
+
+for i in "${!mysrcs[@]}"; do
+  if [ "${mysrcs}" != "~" ]
+  then
+    unfound+=("src/${mysrcs[i]}")
+  fi
+done
+
+for i in "${!matched_pair[@]}"; do
+  # TODO: But consider if the file is not named aptly as .h or .cpp
+  # Then it is required to append with extension
+  printf "include/%s.h\nsrc/%s.cpp\n" "${matched_pair[i]}" "${matched_pair[i]}"
+done
+
+for i in "${!unfound[@]}"; do
+  printf "%s\n" "${unfound[i]}"
+done
+
+# Remove trailing file extension
+# Effectively removes .cpp ad .h
+#for i in "${!myincludes[@]}"; do
+#  if [ "${myincludes[i]%.*}" == "${mysrcs[i]%.*}" ]
+#  then
+#    printf "includes/%s\nsrc/%s\n" "${myincludes[i]}" "${mysrcs[i]}"
+#  else
+#    printf "Didn't catch ${myincludes[i]%.*} to ${mysrcs[i]%.*}\n"
+#  fi
+#done
+##paste '-d\n' $myincludes $mysrcs
+#
+##ls -R $PWD/include/* | awk '{ print $9 }' #> vincludes.txt
+##cat vincludes.txt | sed 's/include/src/' | sed 's/\.h/\.cpp/' #> vsrcs.txt
+##paste '-d\n' vincludes.txt vsrcs.txt
