@@ -4,12 +4,15 @@
 " ======================================
 "
 "
+let g:polyglot_disabled = []
 scriptencoding utf-8
 set encoding=utf-8
 let mapleader=" "
 nnoremap <leader>c :noh<CR>
 nnoremap <leader>dtw :call TrimWhiteSpace()<CR>
-map <F3> :GoFmt<CR>
+map <F9> :bprevious<CR>
+map <F10> :bnext<CR>
+
 " What the fuck is Ex mode?
 nnoremap Q <nop>
 nnoremap gy gT
@@ -18,8 +21,10 @@ map <PageDown> <C-d>zz
 map <PageUp> <C-u>zz
 imap <PageDown> <C-o><C-d><C-o>zz
 imap <PageUp> <C-o><C-u><C-o>zz
+nnoremap <F11> :ls<cr>:b<space>
 nnoremap G Gzz
 nnoremap gf <C-w>vgf
+
 
 " Quicker window movement in normal mode
 nnoremap <C-j> <C-w>j
@@ -34,17 +39,17 @@ set noerrorbells
 set novisualbell
 set belloff=all
 
-set number
-set rnu
+"set number
+"set rnu
 
-set textwidth=150
+"set textwidth=250
 set ruler
 
 set hlsearch
 set smartcase
 set ignorecase
 set incsearch
-set showmatch
+set noshowmatch
 
 set autoindent
 
@@ -62,15 +67,18 @@ set nowrap
 
 set backspace=indent,eol,start
 
+set scrolljump=5
 set showmode
 set lazyredraw
-set cursorline
+set nocursorline
+set nocursorcolumn
 set numberwidth=6
+"set synmaxcol=250
 nmap ; :
 
 set nocompatible
 
-set tags=./tags;/
+"set tags=./tags;/
 
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -101,6 +109,7 @@ try
   Plugin 'preservim/nerdtree'
   Plugin 'joshdick/onedark.vim'
   Plugin 'sheerun/vim-polyglot'
+  Plugin 'wellle/tmux-complete.vim'
   call vundle#end()
 catch /^Vim\%((\a\+)\)\=:E117/
   " Do nothing
@@ -121,7 +130,15 @@ if exists("NERDTreeTogge")
   map<C-o> :NERDTreeToggle<CR>
 endif
 
-autocmd FileType python setlocal completeopt-=preview
+let g:tmuxcomplete#trigger = 'omnifunc'
+
+"autocmd FileType python setlocal completeopt-=preview
+setlocal complete-=i
+setlocal complete-=t
+setglobal complete-=i
+setglobal complete-=t
+"setglobal complete-=u
+
 if exists("NERDTree")
   autocmd VimEnter * NERDTree " open NERDTree on startup
   autocmd VimEnter * wincmd w " jump to active window on startup
@@ -142,7 +159,7 @@ set history=1000
 set diffopt+=vertical
 set splitright
 
-set cc=80,100,120,150
+"set cc=80,100,120,150
 set modelines=0
 set gdefault
 
@@ -160,6 +177,9 @@ if !empty(glob("~/.vim/bundle/nerdtree"))
 else
   map<leader>o :Lex<CR>
 endif
+
+au InsertEnter * hi User1 ctermfg=232 ctermbg=166 guifg=#080808 guibg=#ffff00
+au InsertLeave * hi User1 ctermfg=232 ctermbg=239 guifg=#adadad guibg=#4e4e4e
 
 au InsertEnter * hi User0 ctermfg=232 ctermbg=166 guifg=black guibg=#ff0000
 au InsertLeave * hi User0 ctermfg=232 ctermbg=239 guifg=black guibg=#5fff5f
@@ -260,7 +280,6 @@ endif
 
 " Status line
 " default: set statusline=%f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)
-
 " Status Line Custom
 let g:currentmode={
     \ 'n'      : 'Normal',
@@ -284,22 +303,47 @@ let g:currentmode={
     \ 't'      : 'Terminal'
     \}
 
+function! FileStatusSection()
+  let line_info = ' '
+  let cur_dir = getcwd()
+  let cur_file = expand('%:e')
+  let combined = strlen(cur_dir) + strlen(cur_file)
+
+  if combined >= 79
+    let line_info = ''
+  else
+    let line_info .= cur_dir . ' |'
+  endif
+
+  return line_info
+endfunction
+
 set laststatus=2
-set statusline=
-set statusline+=%0*\ %n\                                 " Buffer number
-set statusline+=%1*\ %{getcwd()}\ \|                     " Work Dir
-set statusline+=%1*\ %<%f%m%r%h%w\                       " File path, modified, readonly, helpfile, preview
-set statusline+=%1*\                                     " Reset
-set statusline+=%3*|                                     " Separator
-set statusline+=%2*\ %Y\                                 " FileType
-set statusline+=%3*|                                     " Separator
-set statusline+=%2*\ %{''.(&fenc!=''?&fenc:&enc).''}     " Encoding
-set statusline+=\ (%{&ff})                               " FileFormat (dos/unix..)
-set statusline+=%=                                       " Right Side
-set statusline+=%2*\ C:%02v                              " Colomn number
-set statusline+=%3*|                                     " Separator
-set statusline+=%1*\ %02l/%L\                            " Line number / total lines, percentage of document
-set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
+function! SetupStatusLine()
+  set statusline=
+  set statusline+=%0*\ %n\                                 " Buffer number
+  "set statusline+=%1*\ %{getcwd()}\ \|                     " Work Dir
+  set statusline+=%1*%{FileStatusSection()}                " Attemps to add Work Dir, otherwise nothing
+  set statusline+=%1*\ %<%f%m%r%h%w\                       " File path, modified, readonly, helpfile, preview
+  set statusline+=%1*\                                     " Reset
+  set statusline+=%3*|                                     " Separator
+  set statusline+=%2*\ %Y\                                 " FileType
+  set statusline+=%3*|                                     " Separator
+  set statusline+=%2*\ %{''.(&fenc!=''?&fenc:&enc).''}     " Encoding
+  set statusline+=\ (%{&ff})                               " FileFormat (dos/unix..)
+  set statusline+=%=                                       " Right Side
+  set statusline+=%2*\ C:%02v                              " Column number
+  set statusline+=%3*|                                     " Separator
+  set statusline+=%1*\ %02l/%L\                            " Line number / total lines, percentage of document
+  set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
+endfunction
+
+function! NoContext()
+  set diffopt=filler,context:0
+endfunction
+
+autocmd BufEnter * call SetupStatusLine()
+"call SetupStatusLine()
 
 
 hi statusline ctermfg=232 ctermbg=239 guibg=#5fff5f guifg=black
