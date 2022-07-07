@@ -5,6 +5,16 @@ set visible-stats on
 set show-all-if-unmodified on
 set mark-symlinked-directories on
 set completion-map-case on
+set echo-control-characters off
+set page-completions on
+set skip-completed-text on
 set bell-style none
 
 TAB:menu-complete
+"\e[B": history-search-forward
+"\e[A": history-search-backward
+"\e[Z": menu-complete-backward
+
+$if Bash
+  Space: magic-space
+$endif

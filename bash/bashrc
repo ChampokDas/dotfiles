@@ -131,6 +131,7 @@ fi
 
 export PYTHONSTARTUP="$HOME/.pythonrc.py"
 export SINGULARITYENV_PS1='\[\e[1;33m\]${SINGULARITY_NAME}-Singularity\n${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+grep -q docker /proc/1/cgroup && export PS1='\[\e[1;33m\]Docker\n${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 if grep -q Microsoft /proc/version; then
   # https://github.com/microsoft/WSL/issues/423#issuecomment-221627364
   export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0

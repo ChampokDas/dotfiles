@@ -14,7 +14,7 @@ HTOP_VERSION="3.0.2"
 
 # Setup our stuff
 cd $HOME
-mkdir -p local
+#mkdir -p local
 mkdir -p tmp_files
 MY_TMP_DIR_HOMIE=$HOME/tmp_files
 
@@ -26,7 +26,7 @@ install_fish() {
   cd fish/
   mkdir -p build
   cd build
-  cmake -DCMAKE_INSTALL_PREFIX=$HOME/local ..
+  cmake -DCMAKE_INSTALL_PREFIX=$HOME/.local ..
   make -j 12
   make install
   cd $MY_TMP_DIR_HOMIE
@@ -40,7 +40,7 @@ install_ncurses_and_libevent() {
   mkdir -p libevent
   tar xvzf libevent.tar.gz -C libevent/ --strip-components=1
   cd libevent/
-  ./configure --prefix=$HOME/local --disable-shared
+  ./configure --prefix=$HOME/.local --disable-shared
   make -j 12
   make install
   cd $MY_TMP_DIR_HOMIE
@@ -48,7 +48,7 @@ install_ncurses_and_libevent() {
   mkdir -p ncurses
   tar xvzf ncurses.tar.gz -C ncurses/ --strip-components=1
   cd ncurses/
-  ./configure --prefix=$HOME/local
+  ./configure --prefix=$HOME/.local
   make -j 12
   make install
   cd $MY_TMP_DIR_HOMIE
@@ -65,10 +65,10 @@ install_tmux() {
   mkdir -p tmux
   tar xvzf tmux.tar.gz -C tmux/ --strip-components=1
   cd tmux/
-  ./configure --prefix=$HOME/local CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" \
-    LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include" \
-    CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" \
-    LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib"
+  ./configure --prefix="$HOME/.local" CFLAGS="-I$HOME/.local/include -I$HOME/.local/include/ncurses" \
+    LDFLAGS="-L$HOME/.local/lib -L$HOME/.local/include/ncurses -L$HOME/.local/include" \
+    CPPFLAGS="-I$HOME/.local/include -I$HOME/.local/include/ncurses" \
+    LDFLAGS="-static -L$HOME/.local/include -L$HOME/.local/include/ncurses -L$HOME/.local/lib"
   make -j 12
   make install
 }
@@ -88,20 +88,20 @@ install_htop() {
   mkdir -p htop
   tar xvzf htop.tar.gz -C htop/ --strip-components=1
   cd htop/
-  ./configure --prefix=$HOME/local CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" \
-    LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include" \
-    CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" \
-    LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib"
+  ./configure --prefix=$HOME/.local CFLAGS="-I$HOME/.local/include -I$HOME/.local/include/ncurses" \
+    LDFLAGS="-L$HOME/.local/lib -L$HOME/.local/include/ncurses -L$HOME/.local/include" \
+    CPPFLAGS="-I$HOME/.local/include -I$HOME/.local/include/ncurses" \
+    LDFLAGS="-static -L$HOME/.local/include -L$HOME/.local/include/ncurses -L$HOME/.local/lib"
   make -j 12
   make install
 }
 
-if ! [ -x "$(command -v fish)" ]; then
-  echo "Installing Fish Shell!"
-  install_fish
-else
-  echo "Fish Shell is already installed at: `which fish`"
-fi
+#if ! [ -x "$(command -v fish)" ]; then
+#  echo "Installing Fish Shell!"
+#  install_fish
+#else
+#  echo "Fish Shell is already installed at: `which fish`"
+#fi
 
 
 if ! [ -x "$(command -v tmux)" ]; then
@@ -114,20 +114,20 @@ else
   echo "tmux already installed at: `which tmux`"
 fi
 
-if ! [ -x "$(command -v htop)" ]; then
-  echo "Installing htop!"
-  install_htop
-else
-  echo "htop is already installed at: `which htop`"
-fi
+#if ! [ -x "$(command -v htop)" ]; then
+#  echo "Installing htop!"
+#  install_htop
+#else
+#  echo "htop is already installed at: `which htop`"
+#fi
 
 # Vim stuff
 # Yes, I know, who even uses Vundle
 # I do, stop looking at me like that
-cd $HOME
-if [ ! -d "$HOME/.vim/" ]; then
-  git clone "https://github.com/VundleVim/Vundle.vim" $HOME/.vim/
-fi
-
-cd $HOME
-rm -rf $MY_TMP_DIR_HOMIE
+#cd $HOME
+#if [ ! -d "$HOME/.vim/" ]; then
+#  git clone "https://github.com/VundleVim/Vundle.vim" $HOME/.vim/
+#fi
+#
+#cd $HOME
+#rm -rf $MY_TMP_DIR_HOMIE

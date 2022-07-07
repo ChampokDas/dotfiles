@@ -190,94 +190,94 @@ au InsertLeave * hi User1 ctermfg=232 ctermbg=239 guifg=#adadad guibg=#4e4e4e
 au InsertEnter * hi statusline ctermfg=232 ctermbg=166 guifg=black guibg=#ff0000
 au InsertLeave * hi statusline ctermfg=232 ctermbg=239 guifg=black guibg=#5fff5f
 
-"hi statusline ctermfg=239 ctermbg=239 guifg=black guibg=#5fff5f
-
-function! TrimWhiteSpace()
+fun! TrimWhiteSpace()
   let l:save = winsaveview()
   keeppatterns %s/\s\+$//e
   call winrestview(l:save)
-endfunction
+endfun
 
 if exists("+showtabline")
 	function! MyTabLine()
-			let s = ''
-
-      " loop over each tab page
-      for i in range(tabpagenr('$'))
-        if i + 1 == tabpagenr()
-          let s .= '%#TabLineSel#'
-        else
-          let s .= '%#TabLine#'
+		let s = ''
+		" loop through each tab page
+		for i in range(tabpagenr('$'))
+			if i + 1 == tabpagenr()
+				let s .= '%#TabLineSel#'
+			else
+				let s .= '%#TabLine#'
+			endif
+			if i + 1 == tabpagenr()
+				let s .= '%#TabLineSel#' " WildMenu
+			else
+				let s .= '%#Title#'
+			endif
+			" set the tab page number (for mouse clicks)
+			let s .= '%' . (i + 1) . 'T '
+			" set page number string
+			let s .= i + 1 . ''
+			" get buffer names and statuses
+			let n = ''  " temp str for buf names
+			let m = 0   " &modified counter
+      let c = 0   " &numbufs counter
+      let targ = 0 " current buf num
+			let buflist = tabpagebuflist(i + 1)
+      let curBuf = fnamemodify(bufname(buflist[tabpagewinnr(i + 1) - 1]), ':t')
+			" loop through each buffer in a tab
+			for b in buflist
+				"if getbufvar(b, "&buftype") == 'help'
+					" let n .= '[H]' . fnamemodify(bufname(b), ':t:s/.txt$//')
+				"elseif getbufvar(b, "&buftype") == 'quickfix'
+					" let n .= '[Q]'
+				"elseif getbufvar(b, "&modifiable")
+					" let n .= fnamemodify(bufname(b), ':t') . ', ' " pathshorten(bufname(b))
+				"endif
+        let tmp = fnamemodify(bufname(b), ':t')
+        if (curBuf == tmp)
+          let targ = c
         endif
-        if i + 1 == tabpagenr()
-          let s .= '%#TabLine#' "Wildmenu
-        else
-          let s .= '%#Title#'
-        endif
+				if getbufvar(b, "&modified")
+					let m += 1
+				endif
+        let c += 1
+			endfor
 
-        " set the tab page number (for mouse clicks)
-        let s .= '%' . (i + 1) . 'T '
-        " set page number string
-        let s .= i + 1 . ''
+			let n .= fnamemodify(bufname(buflist[tabpagewinnr(i + 1) - 1]), ':t')
+			let n = substitute(n, ', $', '', '')
 
-        " get buffer names and statuses
-        let n = ''   " tmp str for buf names
-        let m = 0    " &modified number
-        let c = 0    " &numbufs counter
-        let targ = 0 " current buf num
-        let buflist = tabpagebuflist(i + 1)
-        let curBuf = fnamemodify(bufname(buflist[tabpagewinnr(i + 1) - 1]), ':t')
+      if c >= 2
+        let n .= ' (' . (targ+1) . '/' . c . ')'
+      endif
+			" add modified label
+			if m > 0
+				let s .= '+'
+				" let s .= '[' . m . '+]'
+			endif
+			if i + 1 == tabpagenr()
+				let s .= ' %#User0#'
+			else
+				let s .= ' %#User1#'
+			endif
+			" add buffer names
+			if n == ''
+				let s.= '[New]'
+			else
+				let s .= n
+			endif
+			" switch to no underlining and add final space
+			let s .= ' '
+		endfor
+		let s .= '%#TabLineFill#%T'
+		" right-aligned close button
+		" if tabpagenr('$') > 1
+		"   let s .= '%=%#TabLineFill#%999Xclose'
+		" endif
+		return s
+	endfunction
 
-        " loop through each buffer in a tab
-        for buf in buflist
-          let temp = fnamemodify(bufname(buf), ':t')
-          if (curBuf == temp)
-            let targ = c
-          endif
-          if getbufvar(buf, "&modified")
-            let m += 1
-          endif
-          let c += 1
-        endfor
+	set showtabline=2
 
-        let n .= fnamemodify(bufname(buflist[tabpagewinnr(i + 1) - 1]), ':t')
-        let n = substitute(n, ', $', '', '')
-
-        if c >= 2
-          let n .= '(' . (targ+1) . '/' . c . ')'
-        endif
-
-        " add modified label
-        if m > 0
-          let s .= '+'
-          " let s .= '[' . modifiedCounter . '+]'
-        endif
-
-        if i + 1 == tabpagenr()
-          let s .= ' %#User1#'
-        else
-          let s .= ' %#TabLineSel#'
-        endif
-
-        " add buffer names
-        if n == ''
-          let s .= '[New]'
-        else
-          let s .= n
-        endif
-
-        " switch to no underlining and add final space
-        let s .= ' '
-      endfor
-
-      let s .= '%#TabLineFill#%T'
-      return s
-    endfunction
-
-    set showtabline=2
-    set tabline=%!MyTabLine()
+  set tabline=%!MyTabLine()
 endif
-
 " Status line
 " default: set statusline=%f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)
 " Status Line Custom
